@@ -12,7 +12,7 @@
 
 # Set required libraries
 # install.packages("librarian")
-librarian::shelf(tidyverse, lmerTest, RRPP)
+librarian::shelf(tidyverse, lmerTest, lsmeans, pbkrtest, RRPP)
 
 # Clear environment & collect garbage
 rm(list = ls()); gc()
@@ -35,14 +35,16 @@ dplyr::glimpse(flr)
                 # Univariate ----
 ##  ------------------------------------------  ##      
 
-# Make an empty list
+# Make empty lists for storing outputs
 results_list <- list()
+pairs_list <- list()
 
 # Identify the three community metrics we're interested in (for now)
 metrics <- c("abundance", "richness", "diversity_shannon")
 
 # Loop across desired response variables
 for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
+## var <- "butterfly.richness"
   
   # Progress message
   message("Getting results for ", var)
@@ -76,7 +78,26 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   # Add results to the results list
   results_list[[var]] <- var_result
   
-}
+  # If interaction was *not* significant & management *was*, get pairwise results
+  if(nrow(var_result) == 2 & dplyr::filter(var_result, term == "adaptive.mgmt")$p.value < 0.1){
+    
+    # Do pairwise comparisons
+    var_pairs <- lsmeans::lsmeans(mem, pairwise ~ adaptive.mgmt)
+    
+    # Get contrast information
+    var_pairs_df <- as.data.frame(var_pairs$contrasts)
+    
+    # Add to the output list in a prettier format
+    pairs_list[[var]] <- data.frame(
+      "response" = var,
+      "pair" = var_pairs_df$contrast,
+      "estimate" = var_pairs_df$estimate,
+      "t.ratio" = var_pairs_df$t.ratio,
+      "p.value" = var_pairs_df$p.value)
+    
+  } # Close conditional
+  
+} # Close loop
 
 # Unlist & wrangle the output
 results_df <- results_list %>% 
@@ -91,6 +112,26 @@ dplyr::glimpse(results_df)
 # Export the results
 write.csv(x = results_df, row.names = F, na = '',
           file = file.path("results", "univariate-stats.csv"))
+
+# Unlist & wrangle the pairwise comparison results
+pairs_df <- pairs_list %>% 
+  purrr::list_rbind(x = .) %>% 
+  dplyr::mutate(t.ratio = round(x = t.ratio, digits = 1),
+                p.value = round(x = p.value, digits = 3)) %>% 
+  dplyr::mutate(pair = gsub("graze and burn and invasive control", "GB-IC", pair),
+                pair = gsub("graze and burn", "GB", pair),
+                pair = gsub("invasive control", "IC", pair),
+                pair = gsub("burn only", "BO", pair),
+                pair = gsub("patch burn graze", "PBG", pair),
+                pair = gsub(" - ", ":", pair))
+
+# Check that out
+dplyr::glimpse(pairs_df)
+## view(pairs_df)
+
+# Export the results
+write.csv(x = pairs_df, row.names = F, na = '',
+          file = file.path("results", "univariate-pairs.csv"))
 
 ##  ------------------------------------------  ##      
               # Multivariate ----
