@@ -94,19 +94,6 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
     # Add to the output list in a prettier format
     pairs_list[[var]] <- var_pairs_df
     
-    # Get the compact letter display (CLD)
-    var_cld_vec <- multcompView::multcompLetters(
-      supportR::name_vec(content = var_pairs_df$p.value,
-                         name = var_pairs_df$pair))
-    
-    # Transform it into a dataframe
-    var_cld_df <- data.frame("response" = var,
-                             "adaptive.mgmt" = names(var_cld_vec$Letters),
-                             "cld" = var_cld_vec$Letters)
-    
-    # Add to relevant list
-    cld_list[[var]] <- var_cld_df
-    
     } # Close conditional
   
 } # Close loop
@@ -144,17 +131,6 @@ dplyr::glimpse(pairs_df)
 # Export the results
 write.csv(x = pairs_df, row.names = F, na = '',
           file = file.path("results", "univariate-pairs.csv"))
-
-# Wrangle CLD output
-cld_df <- purrr::list_rbind(x = cld_list) 
-  
-# Check that out
-dplyr::glimpse(cld_df)
-## view(cld_df)
-
-# Export the results
-write.csv(x = cld_df, row.names = F, na = '',
-          file = file.path("results", "univariate-cld.csv"))
 
 ##  ------------------------------------------  ##      
               # Multivariate ----
