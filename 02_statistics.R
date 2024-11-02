@@ -86,10 +86,10 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
     # Clean that up
     var_pairs_df <- data.frame(
       "response" = var,
-      "pair" = var_pairs_df$contrast,
-      "estimate" = var_pairs_df$estimate,
-      "t.ratio" = var_pairs_df$t.ratio,
-      "p.value" = var_pairs_df$p.value)
+      "pair" = var_pairs$contrast,
+      "estimate" = var_pairs$estimate,
+      "t.ratio" = var_pairs$t.ratio,
+      "p.value" = var_pairs$p.value)
     
     # Add to the output list in a prettier format
     pairs_list[[var]] <- var_pairs_df
