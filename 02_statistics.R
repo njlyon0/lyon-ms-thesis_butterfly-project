@@ -81,13 +81,10 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   if(nrow(var_result) == 2 & dplyr::filter(var_result, term == "adaptive.mgmt")$p.value < 0.1){
     
     # Do pairwise comparisons
-    var_pairs <- lsmeans::lsmeans(object = mem, pairwise ~ adaptive.mgmt)
-    
-    # Get contrast information
-    var_pairs_df <- as.data.frame(var_pairs$contrasts)
+    var_pairs <- as.data.frame(lsmeans::lsmeans(object = mem, pairwise ~ adaptive.mgmt)$contrasts)
     
     # Clean that up
-    var_pairs_v2 <- data.frame(
+    var_pairs_df <- data.frame(
       "response" = var,
       "pair" = var_pairs_df$contrast,
       "estimate" = var_pairs_df$estimate,
@@ -95,20 +92,20 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
       "p.value" = var_pairs_df$p.value)
     
     # Add to the output list in a prettier format
-    pairs_list[[var]] <- var_pairs_v2
+    pairs_list[[var]] <- var_pairs_df
     
     # Get the compact letter display (CLD)
-    cld_vec <- multcompView::multcompLetters(
-      supportR::name_vec(content = var_pairs_v2$p.value,
-                         name = var_pairs_v2$pair))
+    var_cld_vec <- multcompView::multcompLetters(
+      supportR::name_vec(content = var_pairs_df$p.value,
+                         name = var_pairs_df$pair))
     
     # Transform it into a dataframe
-    cld_df <- data.frame("response" = var,
-                         "adaptive.mgmt" = names(cld_vec$Letters),
-                         "cld" = cld_vec$Letters)
+    var_cld_df <- data.frame("response" = var,
+                             "adaptive.mgmt" = names(var_cld_vec$Letters),
+                             "cld" = var_cld_vec$Letters)
     
     # Add to relevant list
-    cld_list[[var]] <- cld_df
+    cld_list[[var]] <- var_cld_df
     
     } # Close conditional
   
