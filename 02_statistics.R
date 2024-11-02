@@ -38,7 +38,6 @@ dplyr::glimpse(flr)
 # Make empty lists for storing outputs
 results_list <- list()
 pairs_list <- list()
-cld_list <- list()
 
 # Identify the three community metrics we're interested in (for now)
 metrics <- c("abundance", "richness", "diversity_shannon")
@@ -52,11 +51,11 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   
   # Grab correct data
   if(stringr::str_detect(string = var, pattern = "butterfly")) {
-    tax_df <- bf } else { tax_df <- flr }
+    var_df <- bf } else { var_df <- flr }
   
   # Fit model
-  mem <- lmerTest::lmer(tax_df[[var]] ~ adaptive.mgmt * year + (1|pasture),
-                        data = tax_df)
+  mem <- lmerTest::lmer(var_df[[var]] ~ adaptive.mgmt * year + (1|pasture),
+                        data = var_df)
 
   # Extract the ANOVA table of results
   var_result <- tabularize_mem_results(mod = mem) %>% 
@@ -66,8 +65,8 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   if(dplyr::filter(var_result, term == "adaptive.mgmt:year")$p.value > 0.1){
     
     # Fit simpler model (no ixn term)
-    mem <- lmerTest::lmer(tax_df[[var]] ~ adaptive.mgmt + year + (1|pasture),
-                          data = tax_df)
+    mem <- lmerTest::lmer(var_df[[var]] ~ adaptive.mgmt + year + (1|pasture),
+                          data = var_df)
     
     # Re-extract ANOVA table
     var_result <- tabularize_mem_results(mod = mem) %>% 
