@@ -12,7 +12,7 @@
 
 # Set required libraries
 # install.packages("librarian")
-librarian::shelf(tidyverse, lmerTest, lsmeans, pbkrtest, RRPP)
+librarian::shelf(tidyverse, supportR, lmerTest, lsmeans, pbkrtest, multcompView, RRPP)
 
 # Clear environment & collect garbage
 rm(list = ls()); gc()
@@ -38,6 +38,7 @@ dplyr::glimpse(flr)
 # Make empty lists for storing outputs
 results_list <- list()
 pairs_list <- list()
+cld_list <- list()
 
 # Identify the three community metrics we're interested in (for now)
 metrics <- c("abundance", "richness", "diversity_shannon")
@@ -49,13 +50,14 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   # Progress message
   message("Getting results for ", var)
   
-  # Fit model
-  if(stringr::str_detect(string = var, pattern = "butterfly")){
-    mem <- lmerTest::lmer(bf[[var]] ~ adaptive.mgmt * year + (1|pasture), data = bf)
-  } else {
-    mem <- lmerTest::lmer(flr[[var]] ~ adaptive.mgmt * year + (1|pasture), data = flr)
-  }
+  # Grab correct data
+  if(stringr::str_detect(string = var, pattern = "butterfly")) {
+    tax_df <- bf } else { tax_df <- flr }
   
+  # Fit model
+  mem <- lmerTest::lmer(tax_df[[var]] ~ adaptive.mgmt * year + (1|pasture),
+                        data = tax_df)
+
   # Extract the ANOVA table of results
   var_result <- tabularize_mem_results(mod = mem) %>% 
     dplyr::mutate(response = var, .before = dplyr::everything())
@@ -64,11 +66,8 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   if(dplyr::filter(var_result, term == "adaptive.mgmt:year")$p.value > 0.1){
     
     # Fit simpler model (no ixn term)
-    if(stringr::str_detect(string = var, pattern = "butterfly")){
-      mem <- lmerTest::lmer(bf[[var]] ~ adaptive.mgmt + year + (1|pasture), data = bf)
-    } else {
-      mem <- lmerTest::lmer(flr[[var]] ~ adaptive.mgmt + year + (1|pasture), data = flr)
-    }
+    mem <- lmerTest::lmer(tax_df[[var]] ~ adaptive.mgmt + year + (1|pasture),
+                          data = tax_df)
     
     # Re-extract ANOVA table
     var_result <- tabularize_mem_results(mod = mem) %>% 
@@ -82,20 +81,36 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   if(nrow(var_result) == 2 & dplyr::filter(var_result, term == "adaptive.mgmt")$p.value < 0.1){
     
     # Do pairwise comparisons
-    var_pairs <- lsmeans::lsmeans(mem, pairwise ~ adaptive.mgmt)
+    var_pairs <- lsmeans::lsmeans(object = mem, pairwise ~ adaptive.mgmt)
     
     # Get contrast information
     var_pairs_df <- as.data.frame(var_pairs$contrasts)
     
-    # Add to the output list in a prettier format
-    pairs_list[[var]] <- data.frame(
+    # Clean that up
+    var_pairs_v2 <- data.frame(
       "response" = var,
       "pair" = var_pairs_df$contrast,
       "estimate" = var_pairs_df$estimate,
       "t.ratio" = var_pairs_df$t.ratio,
       "p.value" = var_pairs_df$p.value)
     
-  } # Close conditional
+    # Add to the output list in a prettier format
+    pairs_list[[var]] <- var_pairs_v2
+    
+    # Get the compact letter display (CLD)
+    cld_vec <- multcompView::multcompLetters(
+      supportR::name_vec(content = var_pairs_v2$p.value,
+                         name = var_pairs_v2$pair))
+    
+    # Transform it into a dataframe
+    cld_df <- data.frame("response" = var,
+                         "adaptive.mgmt" = names(cld_vec$Letters),
+                         "cld" = cld_vec$Letters)
+    
+    # Add to relevant list
+    cld_list[[var]] <- cld_df
+    
+    } # Close conditional
   
 } # Close loop
 
@@ -132,6 +147,17 @@ dplyr::glimpse(pairs_df)
 # Export the results
 write.csv(x = pairs_df, row.names = F, na = '',
           file = file.path("results", "univariate-pairs.csv"))
+
+# Wrangle CLD output
+cld_df <- purrr::list_rbind(x = cld_list) 
+  
+# Check that out
+dplyr::glimpse(cld_df)
+## view(cld_df)
+
+# Export the results
+write.csv(x = cld_df, row.names = F, na = '',
+          file = file.path("results", "univariate-cld.csv"))
 
 ##  ------------------------------------------  ##      
               # Multivariate ----
