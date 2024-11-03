@@ -13,7 +13,7 @@
 
 # Set required libraries
 # install.packages("librarian")
-librarian::shelf(tidyverse, supportR)
+librarian::shelf(tidyverse, supportR, cowplot)
 
 # Create needed folder(s)
 dir.create(path = file.path("figures"), showWarnings = F)
@@ -26,9 +26,11 @@ source(file.path("tools", "fxn_make-fig.R"))
 
 # Read in butterfly & floral data
 bf <- read.csv(file = file.path("data", "ready-butterflies.csv")) %>% 
-  dplyr::rename(mgmt = adaptive.mgmt.abbrev)
+  dplyr::rename(mgmt = adaptive.mgmt.abbrev) %>% 
+  dplyr::mutate(year = year - 2000)
 flr <- read.csv(file = file.path("data", "ready-flowers.csv")) %>% 
-  dplyr::rename(mgmt = adaptive.mgmt.abbrev)
+  dplyr::rename(mgmt = adaptive.mgmt.abbrev) %>% 
+  dplyr::mutate(year = year - 2000)
 
 # Check structure
 dplyr::glimpse(bf)
@@ -50,23 +52,36 @@ mgmt.shapes <- c("GB" = 24, "GB-IC" = 25, "IC" = 23, "BO" = 21, "PBG" = 22)
 ##  ------------------------------------------  ##
 
 # Butterfly Abundance
-make_fig(df = bf, resp = "butterfly.abundance", focus = "ixn", 
-           cols = mgmt.cols, shps = mgmt.shps)
+bf.abun <- make_fig(df = bf, resp = "butterfly.abundance", focus = "ixn", 
+                    cols = mgmt.cols, shps = mgmt.shps) +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.15, 0.8))
+bf.abun
 
 # Butterfly Richness
 ## By management
-make_fig(df = bf, resp = "butterfly.richness", focus = "mgmt", 
-         cols = mgmt.cols, shps = mgmt.shps)
+bf.rich1 <- make_fig(df = bf, resp = "butterfly.richness", focus = "mgmt", 
+                     cols = mgmt.cols, shps = mgmt.shps) +
+  labs(y = "Richness") +
+  theme(legend.position = "none")
 ## By year
-make_fig(df = bf, resp = "butterfly.richness", focus = "year", 
-         cols = mgmt.cols, shps = mgmt.shps)
+bf.rich2 <- make_fig(df = bf, resp = "butterfly.richness", focus = "year", 
+                     cols = mgmt.cols, shps = mgmt.shps) +
+  theme(axis.title.y = element_blank())
+## Combine
+bf.rich <- cowplot::plot_grid(bf.rich1, bf.rich2, nrow = 1)
+bf.rich
 
 # Butterfly Diversity
-make_fig(df = bf, resp = "butterfly.diversity_shannon", focus = "ixn", 
-         cols = mgmt.cols, shps = mgmt.shps) +
-  labs(y = "Butterfly Shannon Diversity")
+bf.dive <- make_fig(df = bf, resp = "butterfly.diversity_shannon", focus = "ixn", 
+                    cols = mgmt.cols, shps = mgmt.shps) +
+  labs(y = "Shannon Diversity") +
+  theme(legend.position = "none")
+bf.dive
 
-
-
+# Assemble into a multi-panel figure
+cowplot::plot_grid(bf.abun, bf.rich, bf.dive, labels = "AUTO", ncol = 1)
+ggsave(filename = file.path("figures", "figure_butterfly.png"),
+       width = 4, height = 12, units = "in")
 
 # End ----
