@@ -52,8 +52,22 @@ mgmt.shapes <- c("GB" = 24, "GB-IC" = 25, "IC" = 23, "BO" = 21, "PBG" = 22)
 ##  ------------------------------------------  ##
 
 # Flower Abundance
-flr.abun <- make_fig(df = flr, resp = "flower.abundance", focus = "year", 
-                    cols = mgmt.cols, shps = mgmt.shps)
+## By year
+flr.abun1 <- make_fig(df = flr, resp = "flower.abundance", focus = "year", 
+                      sig = FALSE, cols = mgmt.cols, shps = mgmt.shps) +
+  ylim(0, (3*10^4))
+  
+## By management
+flr.abun2 <- make_fig(df = flr, resp = "flower.abundance", focus = "mgmt", 
+                     cols = mgmt.cols, shps = mgmt.shps) +
+  labs(y = "Flower Abundance") +
+  ylim(0, (3*10^4)) +
+  theme(legend.position = "none",
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank())
+
+## Combine
+flr.abun <- cowplot::plot_grid(flr.abun1, flr.abun2, nrow = 1)
 flr.abun
 
 # Flower Richness
@@ -64,9 +78,22 @@ flr.rich <- make_fig(df = flr, resp = "flower.richness", focus = "ixn",
 flr.rich
 
 # Flower Diversity
-flr.dive <- make_fig(df = flr, resp = "flower.diversity_shannon", focus = "year", 
-                    cols = mgmt.cols, shps = mgmt.shps) +
-  labs(y = "Shannon Diversity")
+## By year
+flr.dive1 <- make_fig(df = flr, resp = "flower.diversity_shannon", focus = "year", 
+                      sig = FALSE, cols = mgmt.cols, shps = mgmt.shps) +
+  labs(y = "Flower Diversity") +
+  ylim(0, 3.2)
+
+## By management
+flr.dive2 <- make_fig(df = flr, resp = "flower.diversity_shannon", focus = "mgmt", 
+                      cols = mgmt.cols, shps = mgmt.shps) +
+  ylim(0, 3.2) +
+  theme(legend.position = "none",
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank())
+
+## Combine
+flr.dive <- cowplot::plot_grid(flr.dive1, flr.dive2, nrow = 1)
 flr.dive
 
 # Assemble into a multi-panel figure
@@ -86,15 +113,19 @@ bf.abun <- make_fig(df = bf, resp = "butterfly.abundance", focus = "ixn",
 bf.abun
 
 # Butterfly Richness
-## By management
-bf.rich1 <- make_fig(df = bf, resp = "butterfly.richness", focus = "mgmt", 
-                     cols = mgmt.cols, shps = mgmt.shps) +
-  labs(y = "Richness") +
-  theme(legend.position = "none")
 ## By year
-bf.rich2 <- make_fig(df = bf, resp = "butterfly.richness", focus = "year", 
+bf.rich1 <- make_fig(df = bf, resp = "butterfly.richness", focus = "year", 
                      cols = mgmt.cols, shps = mgmt.shps) +
-  theme(axis.title.y = element_blank())
+  ylim(5, 25)
+
+## By management
+bf.rich2 <- make_fig(df = bf, resp = "butterfly.richness", focus = "mgmt", 
+                     cols = mgmt.cols, shps = mgmt.shps) +
+  ylim(5, 25) +
+  theme(legend.position = "none",
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank())
+
 ## Combine
 bf.rich <- cowplot::plot_grid(bf.rich1, bf.rich2, nrow = 1)
 bf.rich
@@ -102,7 +133,7 @@ bf.rich
 # Butterfly Diversity
 bf.dive <- make_fig(df = bf, resp = "butterfly.diversity_shannon", focus = "ixn", 
                     cols = mgmt.cols, shps = mgmt.shps) +
-  labs(y = "Shannon Diversity") +
+  labs(y = "Butterfly Diversity") +
   theme(legend.position = "none")
 bf.dive
 
