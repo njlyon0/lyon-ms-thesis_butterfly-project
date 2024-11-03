@@ -198,7 +198,7 @@ dplyr::glimpse(flr.spp_v2)
 flr.spp_v3 <- flr.spp_v2 %>% 
   dplyr::mutate(flower.common = ifelse(
     test = relative.abun_perc < 5,
-    yes = "Floral Spp. < 5% Total",
+    yes = "Spp. < 5% Total",
     no = stringr::str_to_title(gsub("\\.", " ", x = flower.common))
   )) %>% 
   dplyr::group_by(flower.common) %>% 
@@ -242,7 +242,7 @@ dplyr::glimpse(bf.spp_v2)
 bf.spp_v3 <- bf.spp_v2 %>% 
   dplyr::mutate(butterfly.common = ifelse(
     test = relative.abun_perc < 5,
-    yes = "Butterfly Spp. < 5% Total",
+    yes = "Spp. < 5% Total",
     no = stringr::str_to_title(gsub("\\.", " ", x = butterfly.common))
     )) %>% 
   dplyr::group_by(butterfly.common) %>% 
