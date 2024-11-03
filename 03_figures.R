@@ -61,13 +61,15 @@ mgmt.shapes <- c("GB" = 24, "GB-IC" = 25, "IC" = 23, "BO" = 21, "PBG" = 22)
 flr.abun1 <- make_fig(df = flr, resp = "flower.abundance", focus = "year", 
                       sig = FALSE, cols = mgmt.cols, shps = mgmt.shps) +
   ylim(0, (3*10^4)) +
-  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2))
+  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) + 
+  geom_text(label = "NS", x = 9, y = 3*10^4, size = 5)
   
 ## By management
 flr.abun2 <- make_fig(df = flr, resp = "flower.abundance", focus = "mgmt", 
                      cols = mgmt.cols, shps = mgmt.shps) +
   labs(y = "Flower Abundance") +
   ylim(0, (3*10^4)) +
+  geom_text(label = "NS", x = 5, y = 3*10^4, size = 5) +
   theme(legend.position = "none",
         axis.title.y = element_blank(),
         axis.text.y = element_blank())
@@ -90,12 +92,14 @@ flr.dive1 <- make_fig(df = flr, resp = "flower.diversity_shannon", focus = "year
                       sig = FALSE, cols = mgmt.cols, shps = mgmt.shps) +
   labs(y = "Flower Diversity") +
   ylim(0, 3.2) +
-  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2))
+  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) +
+  geom_text(label = "NS", x = 9, y = 3.2, size = 5)
 
 ## By management
 flr.dive2 <- make_fig(df = flr, resp = "flower.diversity_shannon", focus = "mgmt", 
                       cols = mgmt.cols, shps = mgmt.shps) +
   ylim(0, 3.2) +
+  geom_text(label = "NS", x = 5, y = 3.2, size = 5) +
   theme(legend.position = "none",
         axis.title.y = element_blank(),
         axis.text.y = element_blank())
