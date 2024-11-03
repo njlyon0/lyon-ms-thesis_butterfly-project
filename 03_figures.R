@@ -218,4 +218,84 @@ supportR::ordination(mod = bf_points, grps = as.character(bf$mgmt),
                      x = "topright", bg = mgmt.colors, alpha = 0.7)
 dev.off()
 
+##  ------------------------------------------  ##
+            # Relative Abundance ----
+##  ------------------------------------------  ##
+
+# Tidy environment
+rm(list = setdiff(x = ls(), y = c("bf", "flr", "mgmt.colors", "mgmt.shapes")))
+gc()
+
+# Make object for 'low abundance' designation
+low.abun <- "Spp. < 5% Total"
+
+# Read in relative abundance data for both taxa
+flr.relabun_df <- read.csv(file = file.path("data", "relative-abundance_flowers.csv")) %>% 
+  dplyr::mutate(flower.common = factor(flower.common, levels = rev(c(setdiff(flower.common, low.abun), low.abun))))
+bf.relabun_df <- read.csv(file = file.path("data", "relative-abundance_butterflies.csv")) %>% 
+  dplyr::mutate(butterfly.common = factor(butterfly.common,
+                                       levels = rev(c(setdiff(butterfly.common, low.abun), low.abun))))
+
+# Check them out
+flr.relabun_df
+bf.relabun_df
+
+# Make vectors of colors for both taxa
+flr.colors <- c("Birdsfoot Trefoil" = "#ffbf00", "White Clover" = "#edede9",
+                "Slender Mountain Mint" = "#386641", "Red Clover" = "#fb6f92",
+                "Daisy Fleabane" = "#fcdc5d", "Spp. < 5% Total" = "#000")
+bf.colors <- c("Eastern Tailed Blue" = "#8ecae6", "Clouded Sulphur" = "#fcefb4", 
+               "Orange Sulphur" = "#fcbc5d", "Pearl Crescent" = "#f85e00",
+               "Cabbage White" = "#edf2f4", "Regal Fritillary" = "#a41623", 
+               "Common Wood Nymph" = "#b08968", "Spp. < 5% Total" = "#000")
+
+# Make the floral graph
+flr.relabun <- ggplot(flr.relabun_df, aes(x = relative.abun_perc, y = flower.common,
+                                         color = "y", fill = flower.common)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Relative Abundance (%)", y = "Flower Species") +
+  # geom_vline(xintercept = 10, linetype = 3) +
+  xlim(0, 50) +
+  scale_color_manual(values = "black") +
+  scale_fill_manual(values = flr.colors) +
+  geom_text(label = "Birdsfoot Trefoil", x = 0.5, y = 6, hjust = "left") +
+  geom_text(label = "White Clover", x = 10, y = 5, hjust = "left") +
+  geom_text(label = "Slender Mountain Mint", x = 8, y = 4, hjust = "left") +
+  geom_text(label = "Red Clover", x = 8, y = 3, hjust = "left") +
+  geom_text(label = "Daisy Fleabane", x = 7.5, y = 2, hjust = "left") +
+  geom_text(label = "Spp. < 5% Total", x = 0.5, y = 1, color = "#FFF", hjust = "left") +
+  guides(color = "none") +
+  supportR::theme_lyon() +
+  theme(legend.position = "none",
+        axis.text.y = element_blank())
+flr.relabun
+
+# Do the same for butterflies
+bf.relabun <- ggplot(bf.relabun_df, aes(x = relative.abun_perc, y = butterfly.common,
+                       color = "y", fill = butterfly.common)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Relative Abundance (%)", y = "Butterfly Species") +
+  # geom_vline(xintercept = 10, linetype = 3) +
+  xlim(0, 50) +
+  scale_color_manual(values = "black") +
+  scale_fill_manual(values = bf.colors) +
+  geom_text(label = "Eastern Tailed Blue", x = 0.5, y = 8, hjust = "left") +
+  geom_text(label = "Clouded Sulphur", x = 13, y = 7, hjust = "left") +
+  geom_text(label = "Orange Sulphur", x = 12, y = 6, hjust = "left") +
+  geom_text(label = "Pearl Crescent", x = 9, y = 5, hjust = "left") +
+  geom_text(label = "Cabbage White", x = 7.5, y = 4, hjust = "left") +
+  geom_text(label = "Regal Fritillary", x = 6, y = 3, hjust = "left") +
+  geom_text(label = "Common Wood Nymph", x = 6, y = 2, hjust = "left") +
+  geom_text(label = "Spp. < 5% Total", x = 0.5, y = 1, color = "#FFF", hjust = "left") +
+  guides(color = "none") +
+  supportR::theme_lyon() +
+  theme(legend.position = "none",
+        axis.text.y = element_blank())
+bf.relabun
+
+# Assemble into a multi-panel figure
+cowplot::plot_grid(flr.relabun, bf.relabun, labels = "AUTO", nrow = 1)
+ggsave(filename = file.path("figures", "figure_relative-abundance.png"),
+       width = 8, height = 5, units = "in")
+
 # End ----
