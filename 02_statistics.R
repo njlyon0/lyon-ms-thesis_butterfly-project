@@ -31,6 +31,12 @@ flr <- read.csv(file = file.path("data", "ready-flowers.csv"))
 dplyr::glimpse(bf)
 dplyr::glimpse(flr)
 
+# Identify the threshold for significance
+## Used to determine when:
+### (A) the interaction term should be dropped
+### (B) pairwise comparisons among management methods are warranted
+sig_thresh <- 0.1
+
 ##  ------------------------------------------  ##      
                 # Univariate ----
 ##  ------------------------------------------  ##      
@@ -62,7 +68,7 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
     dplyr::mutate(response = var, .before = dplyr::everything())
   
   # If the interaction is non-significant...
-  if(dplyr::filter(var_result, term == "adaptive.mgmt:year")$p.value > 0.1){
+  if(dplyr::filter(var_result, term == "adaptive.mgmt:year")$p.value > sig_thresh){
     
     # Fit simpler model (no ixn term)
     mem <- lmerTest::lmer(var_df[[var]] ~ adaptive.mgmt + year + (1|pasture),
@@ -77,7 +83,7 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   results_list[[var]] <- var_result
   
   # If interaction was *not* significant & management *was*, get pairwise results
-  if(nrow(var_result) == 2 & dplyr::filter(var_result, term == "adaptive.mgmt")$p.value < 0.1){
+  if(nrow(var_result) == 2 & dplyr::filter(var_result, term == "adaptive.mgmt")$p.value < sig_thresh){
     
     # Pairwise comparisons message
     message("Pairwise comparisons among management methods necessitated!")
@@ -175,7 +181,7 @@ for(taxon in c("butterfly", "flower")){
     "p.value" = taxon_result$table$`Pr(>F)`[1])
   
   # If significant, get pairwise results too
-  if(multivar.results_list[[taxon]]$p.value < 0.1){
+  if(multivar.results_list[[taxon]]$p.value < sig_thresh){
     
     # Pairwise comparisons message
     message("Pairwise comparisons among management methods necessitated!")
