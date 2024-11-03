@@ -7,12 +7,13 @@
 #' @param df (dataframe / tibble) data object to summarize to create the figure
 #' @param resp (character) column name of response variable
 #' @param focus (character) name of type of figure to make. Must be one of "ixn" (interaction), "mgmt" (management), or "year".
+#' @param sig (logical) whether the result was significant. Only relevant when 'focus' is "year"
 #' @param cols (character) vector of custom colors. Must have a 'names' attribute that corresponds to the "mgmt" column
 #' @param shps (character) vector of shape integers (see `?pch`). Must have a 'names' attribute that corresponds to the "mgmt" column
 #' 
 #' @return (ggplot) ggplot2-style figure
 #' 
-make_fig <- function(df, resp, focus, cols, shps){
+make_fig <- function(df, resp, focus, sig = TRUE, cols, shps){
   
   # Error for bad 'focus' entires
   if(focus %in% c("ixn", "mgmt", "year") != TRUE)
@@ -51,23 +52,27 @@ make_fig <- function(df, resp, focus, cols, shps){
       labs(x = "Management", y = y.lab) +
       scale_fill_manual(values = mgmt.colors) +
       supportR::theme_lyon()
-      
+    
   }
   
   # Year figure ----
   if(focus == "year"){
     
-  # Summarize
-  table <- supportR::summary_table(data = df, response = resp, groups = "year", drop_na = T)
-  
-  # Graph
-  q <- ggplot(table, aes(x = year, y = mean)) +
-    geom_errorbar(aes(ymax = mean + std_error, ymin = mean - std_error), width = 0.1) +
-    geom_point(shape = 21, fill = "gray25", size = 3) +
-    geom_smooth(color = "black", formula = "y ~ x", method = "lm", se = F) +
-    labs(x = "Year", y = y.lab) +
-    supportR::theme_lyon()
-  
+    # Summarize
+    table <- supportR::summary_table(data = df, response = resp, groups = "year", drop_na = T)
+    
+    # Graph
+    q <- ggplot(table, aes(x = year, y = mean)) +
+      geom_errorbar(aes(ymax = mean + std_error, ymin = mean - std_error), width = 0.1) +
+      geom_point(shape = 21, fill = "gray35", size = 3) +
+      labs(x = "Year", y = y.lab) +
+      supportR::theme_lyon()
+    
+    # Add trendline if significant
+    if(sig == T){
+      q <-  q +
+        geom_smooth(color = "black", formula = "y ~ x", method = "lm", se = F)
+    }
   }
   
   # Return generated figure
