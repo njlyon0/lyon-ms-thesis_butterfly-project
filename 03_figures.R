@@ -68,7 +68,11 @@ flr.abun2 <- make_fig(df = flr, resp = "flower.abundance", focus = "mgmt",
                      cols = mgmt.cols, shps = mgmt.shps) +
   labs(y = "Flower Abundance") +
   ylim(0, (3*10^4)) +
-  geom_text(label = "NS", x = 5, y = 3*10^4, size = 5) +
+  geom_text(label = "a", x = 0.75, y = 5200, size = 4) +
+  geom_text(label = "b", x = 1.75, y = 12000, size = 4) +
+  geom_text(label = "ab", x = 2.75, y = 7800, size = 4) +
+  geom_text(label = "ab", x = 3.75, y = 11000, size = 4) +
+  geom_text(label = "ab", x = 4.75, y = 11000, size = 4) +
   theme(legend.position = "none",
         axis.title.y = element_blank(),
         axis.text.y = element_blank())
@@ -131,6 +135,11 @@ bf.rich1 <- make_fig(df = bf, resp = "butterfly.richness", focus = "year",
 bf.rich2 <- make_fig(df = bf, resp = "butterfly.richness", focus = "mgmt", 
                      cols = mgmt.cols, shps = mgmt.shps) +
   ylim(5, 25) +
+  geom_text(label = "a", x = 0.75, y = 18.5, size = 4) +
+  geom_text(label = "a", x = 1.75, y = 19, size = 4) +
+  geom_text(label = "a", x = 2.75, y = 18, size = 4) +
+  geom_text(label = "a", x = 3.75, y = 19, size = 4) +
+  geom_text(label = "b", x = 4.75, y = 15, size = 4) +
   theme(legend.position = "none",
         axis.title.y = element_blank(),
         axis.text.y = element_blank())
