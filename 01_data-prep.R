@@ -169,4 +169,48 @@ flr_v5 <- flr_v4 %>%
 write.csv(x = flr_v5, row.names = F, na = '',
           file = file.path("data", "ready-flowers.csv"))
 
+##  ------------------------------------------  ##      
+# Relative Abundance Prep - Butterfly ----
+##  ------------------------------------------  ##      
+
+# Generate an 'overall species count' version of the data
+bf.spp_v1 <- bf_v5 %>% 
+  tidyr::pivot_longer(cols = -year:-butterfly.diversity_shannon,
+                      names_to = "butterfly.common") %>% 
+  dplyr::group_by(butterfly.common) %>% 
+  dplyr::summarize(sp.total = sum(value, na.rm = T)) %>% 
+  dplyr::ungroup()
+
+# Check structure
+dplyr::glimpse(bf.spp_v1)
+
+# Calculate relative abundance (as a %)
+bf.spp_v2 <- bf.spp_v1 %>% 
+  dplyr::mutate(
+    overall.total = sum(sp.total, na.rm = T),
+    relative.abun_perc = sp.total / overall.total * 100
+  )
+
+# Check structure
+dplyr::glimpse(bf.spp_v2)
+
+# Collapse rare species into one group
+bf.spp_v3 <- bf.spp_v2 %>% 
+  dplyr::mutate(butterfly.common = ifelse(
+    test = relative.abun_perc < 5,
+    yes = "Butterfly Spp. < 5% Total",
+    no = stringr::str_to_title(gsub("\\.", " ", x = butterfly.common))
+    )) %>% 
+  dplyr::group_by(butterfly.common) %>% 
+  dplyr::summarize(relative.abun_perc = sum(relative.abun_perc, na.rm = T)) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::arrange(dplyr::desc(relative.abun_perc))
+
+# Check that out
+bf.spp_v3
+
+# Export
+write.csv(x = bf.spp_v3, row.names = F, na = '',
+          file = file.path("data", "relative-abundance_butterflies.csv"))
+
 # End ----
