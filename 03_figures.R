@@ -24,13 +24,18 @@ rm(list = ls()); gc()
 # Load desired custom function(s)
 source(file.path("tools", "fxn_make-fig.R"))
 
+# Define desired order of managment types
+mgmt.order <- c("BO", "PBG", "GB", "GB-IC", "IC")
+
 # Read in butterfly & floral data
 bf <- read.csv(file = file.path("data", "ready-butterflies.csv")) %>% 
   dplyr::rename(mgmt = adaptive.mgmt.abbrev) %>% 
-  dplyr::mutate(year = year - 2000)
+  dplyr::mutate(year = year - 2000,
+                mgmt = factor(x = mgmt, levels = mgmt.order))
 flr <- read.csv(file = file.path("data", "ready-flowers.csv")) %>% 
   dplyr::rename(mgmt = adaptive.mgmt.abbrev) %>% 
-  dplyr::mutate(year = year - 2000)
+  dplyr::mutate(year = year - 2000,
+                mgmt = factor(x = mgmt, levels = mgmt.order))
 
 # Check structure
 dplyr::glimpse(bf)
