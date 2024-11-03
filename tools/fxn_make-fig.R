@@ -46,14 +46,10 @@ make_fig <- function(df, resp, focus, cols, shps){
   if(focus == "mgmt"){
     
     # Graph (no summarizing)
-    q <- ggplot(table, aes(x = mgmt, y = .data[[resp]])) +
+    q <- ggplot(df, aes(x = mgmt, y = .data[[resp]])) +
       geom_boxplot(aes(fill = mgmt), outlier.shape = 21) +
-      geom_point(aes(fill = mgmt, shape = mgmt),
-                 size = 0.5, alpha = 0.3) +
       labs(x = "Management", y = y.lab) +
-      scale_color_manual(values = mgmt.colors) +
       scale_fill_manual(values = mgmt.colors) +
-      scale_shape_manual(values = mgmt.shapes) +
       supportR::theme_lyon()
       
   }
