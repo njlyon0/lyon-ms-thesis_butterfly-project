@@ -24,12 +24,12 @@ dir.create(path = file.path("results"), showWarnings = F)
 source(file.path("tools", "fxn_tabularize-mem-results.R"))
 
 # Read in butterfly & floral data
-bf <- read.csv(file = file.path("data", "ready-butterflies.csv"))
 flr <- read.csv(file = file.path("data", "ready-flowers.csv"))
+bf <- read.csv(file = file.path("data", "ready-butterflies.csv"))
 
 # Check structure
-dplyr::glimpse(bf)
 dplyr::glimpse(flr)
+dplyr::glimpse(bf)
 
 # Identify the threshold for significance
 ## Used to determine when:
@@ -49,7 +49,7 @@ pairs_list <- list()
 metrics <- c("abundance", "richness", "diversity_shannon")
 
 # Loop across desired response variables
-for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
+for(var in c(paste0("flower.", metrics), paste0("butterfly.", metrics))){
 ## var <- "butterfly.richness"
   
   # Progress message
@@ -149,7 +149,7 @@ multivar.results_list <- list()
 multivar.pairs_list <- list()
 
 # Loop across two datasets
-for(taxon in c("butterfly", "flower")){
+for(taxon in c("flower", "butterfly")){
   ## taxon <- "butterfly"
   
   # Progress message
