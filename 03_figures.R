@@ -61,7 +61,6 @@ mgmt.shapes <- c("GB" = 24, "GB-IC" = 25, "IC" = 23, "BO" = 21, "PBG" = 22)
 flr.abun1 <- make_fig(df = flr, resp = "flower.abundance", focus = "year", 
                       sig = FALSE, cols = mgmt.cols, shps = mgmt.shps) +
   ylim(0, (3*10^4)) +
-  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) + 
   geom_text(label = "NS", x = 9, y = 3*10^4, size = 5)
   
 ## By management
@@ -81,7 +80,6 @@ flr.abun
 # Flower Richness
 flr.rich <- make_fig(df = flr, resp = "flower.richness", focus = "ixn", 
                      cols = mgmt.cols, shps = mgmt.shps) +
-  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) +
   theme(legend.position = "inside",
         legend.position.inside = c(0.15, 0.8))
 flr.rich
@@ -92,7 +90,6 @@ flr.dive1 <- make_fig(df = flr, resp = "flower.diversity_shannon", focus = "year
                       sig = FALSE, cols = mgmt.cols, shps = mgmt.shps) +
   labs(y = "Flower Diversity") +
   ylim(0, 3.2) +
-  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) +
   geom_text(label = "NS", x = 9, y = 3.2, size = 5)
 
 ## By management
@@ -120,7 +117,6 @@ ggsave(filename = file.path("figures", "figure_flower.png"),
 # Butterfly Abundance
 bf.abun <- make_fig(df = bf, resp = "butterfly.abundance", focus = "ixn", 
                     cols = mgmt.cols, shps = mgmt.shps) +
-  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) +
   theme(legend.position = "inside",
         legend.position.inside = c(0.15, 0.8))
 bf.abun
@@ -129,8 +125,7 @@ bf.abun
 ## By year
 bf.rich1 <- make_fig(df = bf, resp = "butterfly.richness", focus = "year", 
                      cols = mgmt.cols, shps = mgmt.shps) +
-  ylim(5, 25) +
-  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2))
+  ylim(5, 25)
 
 ## By management
 bf.rich2 <- make_fig(df = bf, resp = "butterfly.richness", focus = "mgmt", 
@@ -148,7 +143,6 @@ bf.rich
 bf.dive <- make_fig(df = bf, resp = "butterfly.diversity_shannon", focus = "ixn", 
                     cols = mgmt.cols, shps = mgmt.shps) +
   labs(y = "Butterfly Diversity") +
-  scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) +
   theme(legend.position = "none")
 bf.dive
 

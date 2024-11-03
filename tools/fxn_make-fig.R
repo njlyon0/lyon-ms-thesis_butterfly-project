@@ -40,6 +40,7 @@ make_fig <- function(df, resp, focus, sig = TRUE, cols, shps){
       scale_color_manual(values = mgmt.colors) +
       scale_fill_manual(values = mgmt.colors) +
       scale_shape_manual(values = mgmt.shapes) +
+      scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) +
       supportR::theme_lyon()
     
   }
@@ -67,6 +68,7 @@ make_fig <- function(df, resp, focus, sig = TRUE, cols, shps){
       geom_errorbar(aes(ymax = mean + std_error, ymin = mean - std_error), width = 0.15) +
       geom_point(shape = 21, fill = "gray35", size = 3) +
       labs(x = "Year", y = y.lab) +
+      scale_x_continuous(breaks = seq(from = 8, to = 18, by = 2)) +
       supportR::theme_lyon()
     
     # Add trendline if significant
