@@ -83,11 +83,16 @@ bf_v4 <- bf_v3 %>%
   tidyr::pivot_wider(names_from = butterfly.common,
                      values_from = butterfly.count, values_fill = 0)
 
-# Final structure check
+# Re-check structure
 dplyr::glimpse(bf_v4)
 
+# Perform any final subsetting
+bf_v5 <- bf_v4 %>% 
+  ## Drop 2007
+  dplyr::filter(year > 2007)
+
 # Export
-write.csv(x = bf_v4, row.names = F, na = '',
+write.csv(x = bf_v5, row.names = F, na = '',
           file = file.path("data", "ready-butterflies.csv"))
   
 ##  ------------------------------------------  ##      
@@ -152,11 +157,16 @@ flr_v4 <- flr_v3 %>%
   tidyr::pivot_wider(names_from = flower.common,
                      values_from = flower.count, values_fill = 0)
 
-# Final structure check
+# Re-check structure
 dplyr::glimpse(flr_v4)
 
+# Perform any final subsetting
+flr_v5 <- flr_v4 %>% 
+  ## Drop 2007
+  dplyr::filter(year > 2007)
+
 # Export
-write.csv(x = flr_v4, row.names = F, na = '',
+write.csv(x = flr_v5, row.names = F, na = '',
           file = file.path("data", "ready-flowers.csv"))
 
 # End ----
