@@ -79,6 +79,9 @@ for(var in c(paste0("butterfly.", metrics), paste0("flower.", metrics))){
   # If interaction was *not* significant & management *was*, get pairwise results
   if(nrow(var_result) == 2 & dplyr::filter(var_result, term == "adaptive.mgmt")$p.value < 0.1){
     
+    # Pairwise comparisons message
+    message("Pairwise comparisons among management methods necessitated!")
+    
     # Do pairwise comparisons
     var_pairs <- as.data.frame(lsmeans::lsmeans(object = mem, pairwise ~ adaptive.mgmt)$contrasts)
     
@@ -173,6 +176,9 @@ for(taxon in c("butterfly", "flower")){
   
   # If significant, get pairwise results too
   if(multivar.results_list[[taxon]]$p.value < 0.1){
+    
+    # Pairwise comparisons message
+    message("Pairwise comparisons among management methods necessitated!")
     
     # Extract pairwise results
     taxon_pairs <- summary(RRPP::pairwise(fit = manova, groups = comm_rdf$adaptive.mgmt))
