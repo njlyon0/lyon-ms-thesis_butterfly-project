@@ -8,3 +8,4 @@ The first chapter of my M.Sc. thesis -- focused on the response of butterfly and
     - All tidying performed in a separate GitHub repository ([njlyon0 / **lyon-ms-thesis_field-tidy**](https://github.com/njlyon0/lyon-ms-thesis_field-tidy))
 - `01_data-prep.R` - Prepares data (including summarization to appropriate spatial scale) for analysis and visualization
 - `02_statistics.R` - Performs statistical analysis on data. Includes univariate and multivariate tests
+- `03_figures.R` - Creates publication-quality figures that reflect patterns identified in the statistics script (`02`)
