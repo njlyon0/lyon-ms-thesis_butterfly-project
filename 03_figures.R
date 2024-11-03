@@ -13,7 +13,7 @@
 
 # Set required libraries
 # install.packages("librarian")
-librarian::shelf(tidyverse, supportR, cowplot)
+librarian::shelf(tidyverse, supportR, cowplot, vegan, ape)
 
 # Create needed folder(s)
 dir.create(path = file.path("figures"), showWarnings = F)
@@ -159,5 +159,63 @@ bf.dive
 cowplot::plot_grid(bf.abun, bf.rich, bf.dive, labels = "AUTO", ncol = 1)
 ggsave(filename = file.path("figures", "figure_butterfly.png"),
        width = 5, height = 12, units = "in")
+
+##  ------------------------------------------  ##
+          # Multivariate - Flowers ----
+##  ------------------------------------------  ##
+
+# Tidy environment
+rm(list = setdiff(x = ls(), y = c("bf", "flr", "mgmt.colors", "mgmt.shapes")))
+gc()
+
+# Get community alone
+flr_comm <- flr %>% 
+  dplyr::select(-year:-flower.diversity_shannon)
+
+# Check that worked
+supportR::diff_check(old = names(flr), new = names(flr_comm))
+names(flr_comm)
+
+# Get a distance matrix
+flr_dist <- vegan::vegdist(x = as.matrix(flr_comm), method = 'kulczynski')
+
+# Perform Principal Coordinates Analysis (PCoA)
+flr_points <- ape::pcoa(D = flr_dist)
+
+# Get an ordination
+png(filename = file.path("figures", "ordination_flower.png"),
+    width = 8, height = 8, units = "in", res = 520)
+supportR::ordination(mod = flr_points, grps = as.character(flr$mgmt),
+                     x = "topright", bg = mgmt.colors, lty = 1, alpha = 0.7)
+dev.off()
+
+##  ------------------------------------------  ##
+        # Multivariate - Butterflies ----
+##  ------------------------------------------  ##
+
+# Tidy environment
+rm(list = setdiff(x = ls(), y = c("bf", "flr", "mgmt.colors", "mgmt.shapes")))
+gc()
+
+# Get community alone
+bf_comm <- bf %>% 
+  dplyr::select(-year:-butterfly.diversity_shannon)
+
+# Check that worked
+supportR::diff_check(old = names(bf), new = names(bf_comm))
+names(bf_comm)
+
+# Get a distance matrix
+bf_dist <- vegan::vegdist(x = as.matrix(bf_comm), method = 'kulczynski')
+
+# Perform Principal Coordinates Analysis (PCoA)
+bf_points <- ape::pcoa(D = bf_dist)
+
+# Get an ordination
+png(filename = file.path("figures", "ordination_butterfly.png"),
+    width = 8, height = 8, units = "in", res = 520)
+supportR::ordination(mod = bf_points, grps = as.character(bf$mgmt),
+                     x = "topright", bg = mgmt.colors, alpha = 0.7)
+dev.off()
 
 # End ----
