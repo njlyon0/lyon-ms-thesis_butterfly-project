@@ -15,11 +15,14 @@
 # install.packages("librarian")
 librarian::shelf(tidyverse, supportR)
 
+# Create needed folder(s)
+dir.create(path = file.path("figures"), showWarnings = F)
+
 # Clear environment & collect garbage
 rm(list = ls()); gc()
 
-# Create needed folder(s)
-dir.create(path = file.path("figures"), showWarnings = F)
+# Load desired custom function(s)
+source(file.path("tools", "fxn_make-fig.R"))
 
 # Read in butterfly & floral data
 bf <- read.csv(file = file.path("data", "ready-butterflies.csv")) %>% 
@@ -46,28 +49,22 @@ mgmt.shapes <- c("GB" = 24, "GB-IC" = 25, "IC" = 23, "BO" = 21, "PBG" = 22)
 # Univariate - Butterflies ----
 ##  ------------------------------------------  ##
 
-# Summarize abundance
-bf.abun <- supportR::summary_table(data = bf, response = "butterfly.abundance",
-                                   groups = c("mgmt", "year"), drop_na = T)
+# Butterfly Abundance
+make_fig(df = bf, resp = "butterfly.abundance", focus = "ixn", 
+           cols = mgmt.cols, shps = mgmt.shps)
 
-# Check that output
-dplyr::glimpse(bf.abun)
+# Butterfly Richness
+## By management
+make_fig(df = bf, resp = "butterfly.richness", focus = "mgmt", 
+         cols = mgmt.cols, shps = mgmt.shps)
+## By year
+make_fig(df = bf, resp = "butterfly.richness", focus = "year", 
+         cols = mgmt.cols, shps = mgmt.shps)
 
-# Make figure
-ggplot(bf.abun, aes(x = year, y = mean)) +
-  geom_errorbar(aes(ymax = mean + std_error, ymin = mean - std_error),
-                position = position_dodge(width = 0.25), width = 0.1) +
-  geom_point(aes(shape = mgmt, fill = mgmt),
-             position = position_dodge(width = 0.25), size = 3) +
-  geom_smooth(aes(color = mgmt),  formula = "y ~ x", method = "lm", se = F) +
-  labs(x = "Year", y = "Mean Butterfly Abundance (± SE)") +
-  scale_color_manual(values = mgmt.colors) +
-  scale_fill_manual(values = mgmt.colors) +
-  scale_shape_manual(values = mgmt.shapes) +
-  supportR::theme_lyon() +
-  theme(legend.position = "none")
-
-
+# Butterfly Diversity
+make_fig(df = bf, resp = "butterfly.diversity_shannon", focus = "ixn", 
+         cols = mgmt.cols, shps = mgmt.shps) +
+  labs(y = "Butterfly Shannon Diversity")
 
 
 
