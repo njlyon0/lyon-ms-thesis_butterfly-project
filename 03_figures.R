@@ -48,7 +48,34 @@ mgmt.colors <- c("GB" = "#DF227C", "GB-IC" = "#725EEC", "IC" = "#588FF9",
 mgmt.shapes <- c("GB" = 24, "GB-IC" = 25, "IC" = 23, "BO" = 21, "PBG" = 22)
 
 ##  ------------------------------------------  ##
-# Univariate - Butterflies ----
+          # Univariate - Flowers ----
+##  ------------------------------------------  ##
+
+# Flower Abundance
+flr.abun <- make_fig(df = flr, resp = "flower.abundance", focus = "year", 
+                    cols = mgmt.cols, shps = mgmt.shps)
+flr.abun
+
+# Flower Richness
+flr.rich <- make_fig(df = flr, resp = "flower.richness", focus = "ixn", 
+                     cols = mgmt.cols, shps = mgmt.shps) +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.15, 0.8))
+flr.rich
+
+# Flower Diversity
+flr.dive <- make_fig(df = flr, resp = "flower.diversity_shannon", focus = "year", 
+                    cols = mgmt.cols, shps = mgmt.shps) +
+  labs(y = "Shannon Diversity")
+flr.dive
+
+# Assemble into a multi-panel figure
+cowplot::plot_grid(flr.abun, flr.rich, flr.dive, labels = "AUTO", ncol = 1)
+ggsave(filename = file.path("figures", "figure_flower.png"),
+       width = 4, height = 12, units = "in")
+
+##  ------------------------------------------  ##
+        # Univariate - Butterflies ----
 ##  ------------------------------------------  ##
 
 # Butterfly Abundance
