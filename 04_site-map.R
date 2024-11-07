@@ -78,6 +78,24 @@ grg <- sf::st_read(dsn = file.path("data", "map_files", "GRG Boundary.shp")) %>%
 plot(grg, axes = T)
 
 ##  ------------------------------------------  ##
+                # Map Helpers ----
+##  ------------------------------------------  ##
+
+# Color palette
+site.colors <- c("KLT" = "#FFB02F", "PAW" = "#FFB02F", "RIN" = "#FFB02F",
+                 "BSH" = "#588FF9", "DUN" = "#588FF9", "RC2" = "#588FF9",
+                 "GIL" = "#DF227C", "LTR" = "#DF227C",
+                 "PYW" = "#DF227C", "STE" = "#DF227C",
+                 "KLN" = "#FF6018", "PYN" = "#FF6018",
+                 "PYS" = "#FF6018", "RIS" = "#FF6018")
+
+# Shape 'palette'
+site.shapes <- c("KLT" = 21, "PAW" = 21, "RIN" = 21,
+                 "BSH" = 23, "DUN" = 23, "RC2" = 23,
+                 "GIL" = 24, "LTR" = 24, "PYW" = 24, "STE" = 24,
+                 "KLN" = 22, "PYN" = 22, "PYS" = 22, "RIS" = 22)
+
+##  ------------------------------------------  ##
 # Map Creation ----
 ##  ------------------------------------------  ##
 
@@ -100,11 +118,13 @@ borders %>%
   ggplot() +
   geom_sf(fill = "gray95") +
   coord_sf(xlim = c(-94.2, -94.04), ylim = c(40.45, 40.75), expand = F) +
-  geom_point(data = coords_sf, aes(x = lon, y = lat, fill = pasture),
-             pch = 23, size = 2) +
+  geom_point(data = coords_sf, aes(x = lon, y = lat,
+                                   fill = pasture, shape = pasture), size = 2) +
   labs(x = "Longitude", y = "Latitude") +
   scale_x_continuous(breaks = seq(from = -94.2, to = -94.04, by = 0.1)) +
   scale_y_continuous(breaks = seq(from = 40.45, to = 40.75, by = 0.15)) +
+  scale_shape_manual(values = site.shapes) +
+  scale_fill_manual(values = site.colors) +
   supportR::theme_lyon() + 
   theme(legend.position = "none")
 
