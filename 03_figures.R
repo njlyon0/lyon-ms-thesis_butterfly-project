@@ -185,8 +185,14 @@ flr_points <- ape::pcoa(D = flr_dist)
 # Get an ordination
 png(filename = file.path("figures", "ordination_flower.png"),
     width = 8, height = 8, units = "in", res = 520)
-supportR::ordination(mod = flr_points, grps = as.character(flr$mgmt),
-                     x = "topright", bg = mgmt.colors, lty = 1, alpha = 0.7)
+supportR::pcoa_ord(mod = flr_points, groupcol = flr$mgmt,
+                   colors = mgmt.colors, shapes = mgmt.shapes,
+                   pt_size = 1, pt_alpha = 0.7, leg_pos = "topright")
+# graphics::text(x = -0.1, y = -0.35, labels = "a", col = "#FFB02F", cex = 2) # BO
+# graphics::text(x = -0.1, y = 0.4, labels = "b", col = "#DF227C", cex = 2) # GB
+# graphics::text(x = 0.3, y = -0.2, labels = "b", col = "#FF6018", cex = 2) # PBG
+# graphics::text(x = 0.4, y = 0.2, labels = "b", col = "#725EEC", cex = 2) # GB-IC
+# graphics::text(x = -0.4, y = -0.1, labels = "ab", col = "#588FF9", cex = 2) # IC
 dev.off()
 
 ##  ------------------------------------------  ##
@@ -214,8 +220,14 @@ bf_points <- ape::pcoa(D = bf_dist)
 # Get an ordination
 png(filename = file.path("figures", "ordination_butterfly.png"),
     width = 8, height = 8, units = "in", res = 520)
-supportR::ordination(mod = bf_points, grps = as.character(bf$mgmt),
-                     x = "topright", bg = mgmt.colors, alpha = 0.7)
+supportR::pcoa_ord(mod = bf_points, groupcol = as.character(bf$mgmt),
+                   colors = mgmt.colors, shapes = mgmt.shapes,
+                   pt_size = 1, pt_alpha = 0.7, leg_pos = "topright")
+# graphics::text(x = -0.1, y = -0.35, labels = "a", col = "#FFB02F", cex = 2) # BO
+# graphics::text(x = -0.1, y = 0.4, labels = "b", col = "#DF227C", cex = 2) # GB
+# graphics::text(x = 0.3, y = -0.2, labels = "b", col = "#FF6018", cex = 2) # PBG
+# graphics::text(x = 0.4, y = 0.2, labels = "c", col = "#725EEC", cex = 2) # GB-IC
+# graphics::text(x = -0.4, y = -0.1, labels = "c", col = "#588FF9", cex = 2) # IC
 dev.off()
 
 ##  ------------------------------------------  ##
