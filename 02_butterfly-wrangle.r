@@ -162,8 +162,9 @@ dplyr::glimpse(bf_v07)
 # Export ----
 ##  ------------------------------------------  ##
 
-# Make a final object
-bf_v99 <- bf_v07
+# Make a final object & ditch columns in 'visits' file
+ bf_v99 <- bf_v07 %>% 
+  dplyr::select(-year:-whittaker)
 
 # Check structure
 dplyr::glimpse(bf_v99)
