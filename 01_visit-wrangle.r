@@ -271,7 +271,7 @@ write.csv(x = vst_v99, row.names = FALSE, na = "",
 # Identify "Observers" in Data ----
 ##  ------------------------------------------  ##
 
-# Strip names from the data
+# Strip names from the data and count number of transects for each
 obs <- vst_v99 %>% 
   dplyr::select(transect_id, dplyr::ends_with("observer")) %>% 
   tidyr::separate_wider_delim(cols = butterfly_observer, delim = "; ",
@@ -285,10 +285,16 @@ obs <- vst_v99 %>%
   dplyr::filter(!is.na(name)) %>% 
   dplyr::group_by(name, type) %>% 
   dplyr::summarize(transect_count = length(unique(transect_id)),
-    .groups = "drop")
+    .groups = "drop") %>% 
+  tidyr::pivot_wider(names_from = type, values_from = transect_count, values_fill = 0) %>% 
+  dplyr::mutate(total = butterfly + flower) %>% 
+  dplyr::arrange(dplyr::desc(total)) %>% 
+  dplyr::mutate(global.total = sum(total, na.rm = TRUE)) %>% 
+  dplyr::mutate(percent.of.total = round(x = ((total / global.total) * 100), digits = 1)) %>% 
+  dplyr::select(-global.total)
 
 # Check that out
-obs
+dplyr::glimpse(obs)
 
 # Export it
 write.csv(x = obs, row.names = FALSE, na = "",
