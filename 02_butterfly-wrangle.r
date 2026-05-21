@@ -170,6 +170,6 @@ dplyr::glimpse(bf_v99)
 
 # Export this locally
 write.csv(x = bf_v99, row.names = FALSE, na = "",
-  file = file.path("data", "tidy", "01_tidy-butterfly.csv"))
+  file = file.path("data", "tidy", "02_tidy-butterfly.csv"))
 
 # End ----

@@ -1,8 +1,8 @@
 ##  ------------------------------------------------------------  ##
-# Butterfly Project - Wrangle Nectar Resource Data
+# Butterfly Project - Wrangle Visit Data
 ##  ------------------------------------------------------------  ##
 # Purpose:
-## Wrangle nectar flower data (e.g., do quality control, calculate metrics)
+## Wrangle sampling event ("visit") data (e.g., do quality control, calculate metrics)
 
 # Load needed libraries
 # install.packages("librarian")
@@ -265,6 +265,6 @@ dplyr::glimpse(vst_v99)
 
 # Export this locally
 write.csv(x = vst_v99, row.names = FALSE, na = "",
-  file = file.path("data", "tidy", "03_tidy-visit.csv"))
+  file = file.path("data", "tidy", "01_tidy-visit.csv"))
 
 # End ----
