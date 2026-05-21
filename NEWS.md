@@ -1,6 +1,6 @@
-# Version 1.0.900
+# Version 2.0
 
-Development version; changes from the preceding version are identified below.
+Changes from the preceding version are identified below.
 
 - Centralizes setup operations in standalone `-setup.r` script
 - Creates new wrangle scripts for each of the three sheets of the 'master' Microsoft Excel data file
