@@ -134,11 +134,38 @@ supportR::diff_check(old = names(flr_v06), new = names(flr_v07))
 dplyr::glimpse(flr_v07)
 
 ##  ------------------------------------------  ##
+# Identify Seedmix Species ----
+##  ------------------------------------------  ##
+
+# Conditionally identify which plant species were part of a restoration seedmix applied in 2015
+flr_v08 <- flr_v07 %>% 
+  dplyr::mutate(in.2015.seedmix = dplyr::case_when(
+    nectar_common %in% tolower(c("Lead plant", "Swamp Milkweed", "Common Milkweed", "Butterfly Milkweed", 
+      "White Wild Indigo", "Prairie Coreopsis", "Tall Coreopsis", "Purple Prairie Clover", 
+      "Illinois bundleflower", "Showy Tick Trefoil", "Prairie Cinquefoil", "Pale Purple Coneflower", 
+      "Purple Coneflower", "Rattlesnake Master", "Tall Boneset", "Oxeye Sunflower", "Alum root", 
+      "Spotted St. John's Wort", "Round-headed Bush Clover", "Cylindrical blazing star", 
+      "Prairie Blazing Star", "Cardinal flower", "Great blue lobelia", "Pale Spike Lobelia", 
+      "Wild Bergamot", "Primrose", "Wild Quinine", "Slender Mountain Mint", "Grey-Headed Coneflower", 
+      "Black-Eyed Susan", "Sweet Black-Eyed Susan", "Prairie Petunia", "Rosinweed", "Cup plant", 
+      "Blue-Eyed Grass", "Stiff goldenrod", "Sky-blue aster", "Silky aster", "Germander", 
+      "Spiderwort", "Ironweed", "Culver's Root", "Golden Alexander")) ~ "in seedmix",
+    TRUE ~ "not"), .after = nectar_scientific)
+
+# Check that worked
+flr_v08 %>% 
+  dplyr::filter(in.2015.seedmix != "not") %>% 
+  dplyr::pull(nectar_common) %>% unique() %>% sort()
+
+# Check structure
+dplyr::glimpse(flr_v08)
+
+##  ------------------------------------------  ##
 # Export ----
 ##  ------------------------------------------  ##
 
 # Make a final object
-flr_v99 <- flr_v07
+flr_v99 <- flr_v08
 
 # Check structure
 dplyr::glimpse(flr_v99)
