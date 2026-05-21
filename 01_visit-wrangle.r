@@ -267,4 +267,31 @@ dplyr::glimpse(vst_v99)
 write.csv(x = vst_v99, row.names = FALSE, na = "",
   file = file.path("data", "tidy", "01_tidy-visit.csv"))
 
+##  ------------------------------------------  ##
+# Identify "Observers" in Data ----
+##  ------------------------------------------  ##
+
+# Strip names from the data
+obs <- vst_v99 %>% 
+  dplyr::select(transect_id, dplyr::ends_with("observer")) %>% 
+  tidyr::separate_wider_delim(cols = butterfly_observer, delim = "; ",
+    names = c("bf_obs1", "bf_obs2"), cols_remove = TRUE, too_few = "align_start") %>% 
+  tidyr::separate_wider_delim(cols = nectar_observer, delim = "; ",
+    names = c("flr_obs1", "flr_obs2"), cols_remove = TRUE, too_few = "align_start") %>% 
+  tidyr::pivot_longer(cols = dplyr::contains("_obs"),
+    names_to = "x", values_to = "name") %>% 
+  dplyr::mutate(type = ifelse(stringr::str_detect(string = x, pattern = "flr_"),
+    yes = "flower", no = "butterfly")) %>% 
+  dplyr::filter(!is.na(name)) %>% 
+  dplyr::group_by(name, type) %>% 
+  dplyr::summarize(transect_count = length(unique(transect_id)),
+    .groups = "drop")
+
+# Check that out
+obs
+
+# Export it
+write.csv(x = obs, row.names = FALSE, na = "",
+  file = file.path("data", "01_observer-credit.csv"))
+
 # End ----
