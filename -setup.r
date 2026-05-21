@@ -14,6 +14,7 @@ librarian::shelf(tidyverse)
 
 # Create needed folder(s)
 dir.create(path = file.path("data", "raw"), showWarnings = FALSE, recursive = TRUE)
+dir.create(path = file.path("data", "tidy"), showWarnings = FALSE)
 dir.create(path = file.path("graphs"), showWarnings = FALSE)
 
 # End ----
