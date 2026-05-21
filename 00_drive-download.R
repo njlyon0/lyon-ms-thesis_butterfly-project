@@ -15,7 +15,7 @@ source("-setup.r")
 rm(list = ls()); gc()
 
 ##  ------------------------------------------  ##
-# Make Folders ----
+# Download 'Master' Data ----
 ##  ------------------------------------------  ##
 
 # List files in relevant Drive folder
