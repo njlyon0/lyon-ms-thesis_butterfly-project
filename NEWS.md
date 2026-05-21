@@ -1,3 +1,9 @@
+# Version 2.0.0.900
+
+Development version, changes are listed below as they are made.
+
+- Adds Zenodo DOI badge for code citation
+
 # Version 2.0
 
 Changes from the preceding version are identified below.
