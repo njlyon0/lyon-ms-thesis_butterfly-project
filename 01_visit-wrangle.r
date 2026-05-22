@@ -154,7 +154,7 @@ dplyr::glimpse(vst_v99)
 
 # Export this locally
 write.csv(x = vst_v99, row.names = FALSE, na = "",
-  file = file.path("data", "tidy", "01_tidy-visit.csv"))
+  file = file.path("data", "01_tidy-visit.csv"))
 
 ##  ------------------------------------------  ##
 # Identify "Observers" in Data ----

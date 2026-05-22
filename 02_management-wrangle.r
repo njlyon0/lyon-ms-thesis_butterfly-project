@@ -19,7 +19,7 @@ rm(list = ls()); gc()
 ##  ------------------------------------------  ##
 
 # Read in the relevant data
-mgmt_v01 <- read.csv(file.path("data", "tidy", "01_tidy-visit.csv"))
+mgmt_v01 <- read.csv(file.path("data", "01_tidy-visit.csv"))
 
 # Check structure
 dplyr::glimpse(mgmt_v01)
@@ -175,6 +175,6 @@ dplyr::glimpse(mgmt_v99)
 
 # Export this locally
 write.csv(x = mgmt_v99, row.names = FALSE, na = "",
-  file = file.path("data", "tidy", "02_tidy-management.csv"))
+  file = file.path("data", "02_tidy-management.csv"))
 
 # End ----
