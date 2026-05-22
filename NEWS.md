@@ -2,7 +2,8 @@
 
 Development version, changes are listed below as they are made.
 
-- Adds Zenodo DOI badge for code citation
+- Adds Zenodo DOI badge for code citation to README
+- Separates management and observer wrangling into standalone scripts
 
 # Version 2.0
 
