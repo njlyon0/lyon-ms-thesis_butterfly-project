@@ -159,7 +159,7 @@ dplyr::glimpse(flr_taxa_v01)
 
 # Conditionally identify which plant species were part of a restoration seedmix applied in 2015
 flr_taxa <- flr_taxa_v01 %>% 
-  dplyr::mutate(in.2015.seedmix = dplyr::case_when(
+  dplyr::mutate(seedmix = dplyr::case_when(
     common.name %in% tolower(c("Lead plant", "Swamp Milkweed", "Common Milkweed", "Butterfly Milkweed", 
       "White Wild Indigo", "Prairie Coreopsis", "Tall Coreopsis", "Purple Prairie Clover", 
       "Illinois bundleflower", "Showy Tick Trefoil", "Prairie Cinquefoil", "Pale Purple Coneflower", 
@@ -174,7 +174,7 @@ flr_taxa <- flr_taxa_v01 %>%
 
 # Check that worked
 flr_taxa %>% 
-  dplyr::filter(in.2015.seedmix == TRUE) %>% 
+  dplyr::filter(seedmix == TRUE) %>% 
   dplyr::pull(common.name) %>% unique() %>% sort()
 
 # Check structure
