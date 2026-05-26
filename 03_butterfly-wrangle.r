@@ -159,12 +159,33 @@ supportR::diff_check(old = names(bf_v06), new = names(bf_v07))
 dplyr::glimpse(bf_v07)
 
 ##  ------------------------------------------  ##
+# Create Taxonomic Table ----
+##  ------------------------------------------  ##
+
+# Get common-to-scientific name table so that the 'actual' data can be simpler
+bf_taxa <- bf_v07 %>% 
+  dplyr::select(butterfly_common, butterfly_scientific) %>% 
+  dplyr::distinct() %>% 
+  dplyr::mutate(species = paste0(toupper(stringr::str_sub(butterfly_scientific, start = 1, end = 1)),
+    stringr::str_sub(butterfly_scientific, start = 2, end = nchar(butterfly_scientific)))) %>% 
+  tidyr::separate_wider_delim(cols = species, names = c("genus", "specific.epithet"),
+    delim = " ", cols_remove = FALSE) %>% 
+  dplyr::select(-butterfly_scientific) %>% 
+  dplyr::rename(common.name = butterfly_common) %>% 
+  dplyr::relocate(species, .before = genus) %>% 
+  dplyr::arrange(species)
+
+# Check structure
+dplyr::glimpse(bf_taxa)
+
+##  ------------------------------------------  ##
 # Export ----
 ##  ------------------------------------------  ##
 
-# Make a final object & ditch columns in 'visits' file
+# Make a final object & ditch columns in other tables
  bf_v99 <- bf_v07 %>% 
-  dplyr::select(-year:-whittaker)
+  dplyr::select(-year:-whittaker, -butterfly_scientific) %>% 
+  dplyr::rename(common.name = butterfly_common)
 
 # Check structure
 dplyr::glimpse(bf_v99)
@@ -172,5 +193,9 @@ dplyr::glimpse(bf_v99)
 # Export this locally
 write.csv(x = bf_v99, row.names = FALSE, na = "",
   file = file.path("data", "03_tidy-butterfly.csv"))
+
+# Export taxaonomic table as well
+write.csv(x = bf_taxa, row.names = FALSE, na = "",
+  file = file.path("data", "03_butterfly-taxa.csv"))
 
 # End ----
