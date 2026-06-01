@@ -27,4 +27,17 @@ purrr::walk2(.x = drive_raw$id, .y = drive_raw$name,
   .f = ~ googledrive::drive_download(file = .x, overwrite = TRUE,
     path = file.path("data", "raw", .y)))
 
+##  ------------------------------------------  ##
+# Download Site Coordinates ----
+##  ------------------------------------------  ##
+
+# List files in relevant Drive folder
+(drive_site <- googledrive::drive_ls(path = googledrive::as_id("https://drive.google.com/drive/u/0/folders/1PBA3pYOvpK1CSWS0FUxzBVooU3i1ZeJS")) %>% 
+    dplyr::filter(stringr::str_detect(string = name, pattern = "Site Coords")))
+
+# Download those files
+purrr::walk2(.x = drive_site$id, .y = drive_site$name,
+  .f = ~ googledrive::drive_download(file = .x, overwrite = TRUE,
+    path = file.path("data", "raw", .y)))
+
 # End ----
