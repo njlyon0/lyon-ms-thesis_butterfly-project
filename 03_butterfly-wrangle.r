@@ -68,11 +68,19 @@ sort(unique(bf_v02$sex))
 
 # Standardize and streamline those columns
 bf_v03 <- bf_v02 %>% 
+  dplyr::mutate(dplyr::across(.cols = c(site, round, whittaker),
+    .fns = ~ dplyr::case_when(
+    stringr::str_detect(string = ., pattern = "RCH") != TRUE ~ .,
+    stringr::str_detect(string = ., pattern = "RCH") & 
+      year < 14 ~ gsub("RCH", "RCH.2007", .),
+    stringr::str_detect(string = ., pattern = "RCH") & 
+      year >= 14 ~ gsub("RCH", "RCH.2014", .)))) %>% 
   dplyr::mutate(confidence = tolower(confidence)) %>% 
   dplyr::mutate(activity = tolower(activity),
     activity = gsub("flying\\/ basking", "flying/basking", x = activity))
 
 # Re-check altered ones
+sort(unique(bf_v03$site))
 sort(unique(bf_v03$confidence))
 sort(unique(bf_v03$activity))
 
