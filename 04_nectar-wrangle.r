@@ -57,8 +57,17 @@ sort(unique(flr_v02$month))
 sort(unique(flr_v02$round))
 
 # Standardize and streamline those columns
-flr_v03 <- flr_v02
-## No such wrangling needed
+flr_v03 <- flr_v02 %>% 
+  dplyr::mutate(dplyr::across(.cols = c(site, round, whittaker),
+    .fns = ~ dplyr::case_when(
+    stringr::str_detect(string = ., pattern = "RCH") != TRUE ~ .,
+    stringr::str_detect(string = ., pattern = "RCH") & 
+      year < 14 ~ gsub("RCH", "RCH.2007", .),
+    stringr::str_detect(string = ., pattern = "RCH") & 
+      year >= 14 ~ gsub("RCH", "RCH.2014", .))))
+
+# Re-check
+sort(unique(flr_v03$site))
 
 # Check structure
 dplyr::glimpse(flr_v03)
