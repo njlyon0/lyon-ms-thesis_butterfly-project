@@ -132,12 +132,21 @@ dplyr::glimpse(vst_v05)
 vst_v06 <- vst_v05 %>% 
   tidyr::separate_wider_delim(cols = date, delim = ".",
     names = c("month", "day"), cols_remove = TRUE) %>%
+  dplyr::mutate(day = stringr::str_sub(string = day, start = 1, end = 2)) %>% 
   dplyr::mutate(month = as.numeric(month),
     day = as.numeric(day)) %>% 
   dplyr::relocate(month, day, .after = year) %>%
   dplyr::mutate(year = year + 2000) %>% 
   dplyr::mutate(date = as.Date(paste(day, month, year, sep = "-"), format = "%d-%m-%Y"),
     .after = day)
+
+# Do those look reasonable?
+sort(unique(vst_v06$year))
+sort(unique(vst_v06$month))
+sort(unique(vst_v06$day))
+vst_v06 %>% 
+  dplyr::filter(is.na(date)) %>% 
+  dplyr::glimpse()
 
 # Check structure
 dplyr::glimpse(vst_v06)
