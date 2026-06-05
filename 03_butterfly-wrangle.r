@@ -98,6 +98,8 @@ sort(unique(bf_v03$nectar_common))
 
 # Make needed repairs
 bf_v04 <- bf_v03 %>% 
+  dplyr::mutate(butterfly_common = ifelse(butterfly_common == "question mark", 
+    yes = "question mark butterfly", no = butterfly_common)) %>% 
   dplyr::mutate(butterfly_common = dplyr::case_when(
     butterfly_common %in% c("unknown cloudywing", "unknown duskywing", "unknown large skipper") ~ "unknown skipper",
     butterfly_common %in% c("unknown comma", "unknown lady") ~ "unknown brush-foot",
