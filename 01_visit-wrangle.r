@@ -143,11 +143,33 @@ vst_v06 <- vst_v05 %>%
 dplyr::glimpse(vst_v06)
 
 ##  ------------------------------------------  ##
+# Fix Richardson Name Issue ----
+##  ------------------------------------------  ##
+
+# In 2014, RCH patches were re-drawn and transects adjusted
+vst_v07 <- vst_v06 %>% 
+  dplyr::mutate(dplyr::across(.cols = c(site, patch, whittaker),
+    .fns = ~ dplyr::case_when(
+      stringr::str_detect(string = ., pattern = "RCH") != TRUE ~ .,
+      stringr::str_detect(string = ., pattern = "RCH") & 
+        year < 2014 ~ gsub("RCH", "RCH.2007", .),
+      stringr::str_detect(string = ., pattern = "RCH") & 
+        year >= 2014 ~ gsub("RCH", "RCH.2014", .))))
+    
+# What sites/etc. changed?
+supportR::diff_check(old = unique(vst_v06$site), new = unique(vst_v07$site))
+supportR::diff_check(old = unique(vst_v06$patch), new = unique(vst_v07$patch))
+supportR::diff_check(old = unique(vst_v06$whittaker), new = unique(vst_v07$whittaker))
+
+# Check structure
+dplyr::glimpse(vst_v07)
+
+##  ------------------------------------------  ##
 # Export ----
 ##  ------------------------------------------  ##
 
 # Make a final object
-vst_v99 <- vst_v06
+vst_v99 <- vst_v07
 
 # Check structure
 dplyr::glimpse(vst_v99)
