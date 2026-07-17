@@ -189,11 +189,22 @@ bf_taxa <- bf_v07 %>%
 dplyr::glimpse(bf_taxa)
 
 ##  ------------------------------------------  ##
+# Drop Zero-Abundance Taxa ----
+##  ------------------------------------------  ##
+
+# Remove any rows where the total for a species in a given transect is 0
+bf_v08 <- bf_v07 %>% 
+  dplyr::filter(count > 0)
+
+# Any rows lost?
+message(nrow(bf_v08) - nrow(bf_v07), " rows lost")
+
+##  ------------------------------------------  ##
 # Export ----
 ##  ------------------------------------------  ##
 
 # Make a final object & ditch columns in other tables
- bf_v99 <- bf_v07 %>% 
+ bf_v99 <- bf_v08 %>% 
   dplyr::select(-year:-whittaker, -butterfly_scientific) %>% 
   dplyr::rename(common.name = butterfly_common)
 
