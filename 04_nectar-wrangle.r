@@ -190,11 +190,25 @@ flr_taxa %>%
 dplyr::glimpse(flr_taxa)
 
 ##  ------------------------------------------  ##
+# Drop Zero-Abundance Taxa ----
+##  ------------------------------------------  ##
+
+# Remove any rows where the total for a species in a given transect is 0
+flr_v08 <- flr_v07 %>% 
+  dplyr::filter(inflorescence_count > 0)
+
+# Any rows lost?
+message(nrow(flr_v07) - nrow(flr_v08), " rows lost")
+
+# Check structure
+dplyr::glimpse(flr_v08)
+
+##  ------------------------------------------  ##
 # Export ----
 ##  ------------------------------------------  ##
 
 # Make a final object & ditch columns in 'visits' file
-flr_v99 <- flr_v07 %>% 
+flr_v99 <- flr_v08 %>% 
   dplyr::select(-year:-whittaker, -nectar_scientific) %>% 
   dplyr::rename(common.name = nectar_common)
 
