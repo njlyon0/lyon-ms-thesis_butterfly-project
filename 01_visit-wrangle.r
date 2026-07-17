@@ -171,11 +171,25 @@ supportR::diff_check(old = unique(vst_v06$whittaker), new = unique(vst_v07$whitt
 dplyr::glimpse(vst_v07)
 
 ##  ------------------------------------------  ##
+# Remove Duplicate Rows ----
+##  ------------------------------------------  ##
+
+# Explicitly drop duplicate rows
+vst_v08 <- vst_v07 %>% 
+  dplyr::distinct()
+
+# Check rows lost
+message(nrow(vst_v07) - nrow(vst_v08), " rows lost")
+
+# Check structure
+dplyr::glimpse(vst_v08)
+
+##  ------------------------------------------  ##
 # Export ----
 ##  ------------------------------------------  ##
 
 # Make a final object
-vst_v99 <- vst_v07
+vst_v99 <- vst_v08
 
 # Check structure
 dplyr::glimpse(vst_v99)
