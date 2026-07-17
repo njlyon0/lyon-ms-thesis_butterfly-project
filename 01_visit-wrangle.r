@@ -144,9 +144,6 @@ vst_v06 <- vst_v05 %>%
 sort(unique(vst_v06$year))
 sort(unique(vst_v06$month))
 sort(unique(vst_v06$day))
-vst_v06 %>% 
-  dplyr::filter(is.na(date)) %>% 
-  dplyr::glimpse()
 
 # Check structure
 dplyr::glimpse(vst_v06)
