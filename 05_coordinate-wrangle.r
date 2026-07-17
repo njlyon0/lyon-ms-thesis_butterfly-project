@@ -218,14 +218,14 @@ coord_v08 %>%
   dplyr::distinct()
 
 # Check structure
-dplyr::glimpse(coord_v07)
+dplyr::glimpse(coord_v08)
 
 ##  ------------------------------------------  ##
 # Export ----
 ##  ------------------------------------------  ##
 
 # Make a final object
-coord_v99 <- coord_v07
+coord_v99 <- coord_v08
 
 # Check structure
 dplyr::glimpse(coord_v99)
