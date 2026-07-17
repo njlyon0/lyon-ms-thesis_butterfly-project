@@ -4,6 +4,8 @@ Development version, changes are listed below as they are made.
 
 - Adds Zenodo DOI badge for code to README
 - Adds EDI data package ID to README
+- Adds script explanations to README
+- Removes data abstract from README
 - Separates management and observer wrangling into standalone scripts
 - Extracts butterfly/nectar taxonomic information into separate outputs
 - Identifies site centroid latitude/longitude coordinates
