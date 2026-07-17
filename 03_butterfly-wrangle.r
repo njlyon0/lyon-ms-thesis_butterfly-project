@@ -197,7 +197,10 @@ bf_v08 <- bf_v07 %>%
   dplyr::filter(count > 0)
 
 # Any rows lost?
-message(nrow(bf_v08) - nrow(bf_v07), " rows lost")
+message(nrow(bf_v07) - nrow(bf_v08), " rows lost")
+
+# Check structure
+dplyr::glimpse(bf_v08)
 
 ##  ------------------------------------------  ##
 # Export ----
